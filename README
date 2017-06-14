@@ -3,5 +3,6 @@ A group of ansible scripts produced on an account in DXC.technology for OneView 
 
 In this GitHub, it holds the structure of files in order for the Ansible playbooks to work.
 
-NOTE: When wanting to use a specific playbook and run as a task, either copy the file or the code into the playbook within the 'Tasks' folder. IF copying the file into the Tasks folder, ensure the name is called "main.yml" otherwise Ansible will not read the file
-When using Variables, ensure the variables file is also called 'main.yml' as, once again, Ansible will not read it
+NOTE: All the plabooks are in the path of: roles > quicktest > tasks. Here are 3 folders: Create, Delete and Gather. Within these folders hold the playbooks. In order to use these playbooks, they will need to be in the 'tasks' folder and renamed to 'main.yml' otherwise Ansible will not read the file.
+
+NOTE: When using a variable file, ensure the variables file is also called 'main.yml' as, once again, Ansible will not read it. Also it will need to be placed in the 'vars' folder. The account variable file is not on here, but an example one is. If needing the used file, please contact someone in the Synergy POC team
