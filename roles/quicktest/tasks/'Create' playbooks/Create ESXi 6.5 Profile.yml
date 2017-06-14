@@ -1,0 +1,170 @@
+- name: Create an ESXi 6.5 profile
+  oneview_server_profile:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "AnsibleProfileTemplateTest101"
+      description: "Test Description"
+      server_hardware: "{{ Serv_b4 }}"
+      serverHardwareTypeName: "{{ Serv_Type480 }}"
+      enclosureGroupName: "{{ Enclosure_Group }}"
+#
+# This function of code is for the image streamer. If not needed, remove
+#
+      osDeploymentSettings:
+        osDeploymentPlanName: "Zoly - deploy esxi 6.5"
+        osCustomAttributes:
+          -  name: Hostname
+             value: "esxi01"
+          -  name: ManagementNIC.connectionid
+             value: 2
+          -  name: ManagementNIC.dhcp
+             value: false
+          -  name: ManagementNIC.ipv4disable
+             value: false
+          -  name: ManagementNIC.networkuri
+             value: "{{ NET_VLANDMZ_Uri }}"
+          -  name: ManagementNIC.constraint
+             value: "userspecified"
+          -  name: ManagementNIC.dns1
+             value: "{{ IP_Dns1 }}"
+          -  name: ManagementNIC.dns2
+             value: "{{ IP_Dns2 }}"
+          -  name: ManagementNIC.netmask
+             value: "{{ IP_SubNet }}"
+          -  name: ManagementNIC.ipaddress
+             value: "{{ IP_Address }}"
+          -  name: ManagementNIC.gateway
+             value: "{{ IP_Gateway }}"
+#
+# Boot mode is requred         
+#
+      bootMode:
+        manageMode: True
+        mode: "UEFI"
+#
+# Next is the BIOS. If BIOS is needed, managebios needs to be True otherwise do not put the code in...default is false. The over-ridden settings are the items changed from the default
+#
+      bios:
+        manageBios: "true"        
+        overriddenSettings:
+          - id: "PowerRegulator"
+            value: "StaticHighPerf"
+          - id: "MinProcIdlePkgState"
+            value: "NoState"
+          - id: "MinProcIdlePower"
+            value: "NoCStates"
+          - id: "PowerProfile"
+            value: "MaxPerf"
+          - id: "IntelQpiPowerManagement"
+            value: "Disabled"
+          - id: "EnergyPerfBias"
+            value: "MaxPerf"
+#
+# Network connections. FC are required for the SAN storages. The two lines of code commented out are there if the mezzamine has more than 4 ports
+#
+      connections:
+        - id: 1
+          name: "Deployment Network A"
+          functionType: "Ethernet"
+          portId: "Mezz 3:1-a"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Deploy_NET }}"
+          boot:
+            priority: "Primary" #used as it is an iSCSi network
+        - id: 2
+          name: "Net-VLAN202-Man-A"
+          functionType: "Ethernet"
+          portId: "Mezz 3:2-a"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Man_VLAN }}"
+          boot:
+            priority: "NotBootable"
+        - id: 4
+          name: "Net-VLAN202-Man-B"
+          functionType: "Ethernet"
+#          portId: "Mezz 6:1-a"
+          portId: "Auto"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Man_VLAN }}"
+          boot:
+            priority: "NotBootable"
+        - id: 5
+          name: "Cust-A"
+          functionType: "Ethernet"
+#          portId: "Mezz 6:2-a"
+          portId: "Auto"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Cust_VLAN }}"
+          boot:
+            priority: "NotBootable"
+        - id: 6
+          name: "Cust-B"
+          functionType: "Ethernet"
+          portId: "Mezz 3:1-c"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Cust_VLAN }}"
+          boot:
+            priority: "NotBootable"
+        - id: 7
+          name: "SAN-A"
+          functionType: "FibreChannel"
+          portId: "Mezz 3:1-b"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ SAN-A }}"
+          boot:
+            priority: "NotBootable"
+        - id: 8
+          name: "SAN-B"
+          functionType: "FibreChannel"
+          portId: "Mezz 3:2-b"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ SAN-B }}"
+          boot:
+            priority: "NotBootable" 
+#
+#SAN Storage. The LUN starts at 0 with increments of 1. the names are important, its what the SAN was labelled as in Volumes.                                                             
+#
+      sanStorage:
+        hostOSType: 'VMware (ESXi)'
+        manageSanStorage: true
+        volumeAttachments:
+          - id: 1
+            volumeName: 'ESXi-Shared-Vol-Data01'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool5 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Auto"
+            lun: 0
+            storagePaths:
+              - isEnabled: true
+                connectionId: 7 #SAN-A
+                storageTargetType: 'Auto'
+              - isEnabled: true
+                connectionId: 8 #SAN-B
+                storageTargetType: 'Auto'
+          - id: 2
+            volumeName: 'ESXi-Shared-Vol-Log-01'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool5 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Auto"
+            lun: 1
+            storagePaths:
+              - isEnabled: true
+                connectionId: 7 #SAN-A
+                storageTargetType: 'Auto'
+              - isEnabled: true
+                connectionId: 8 #SAN-B
+                storageTargetType: 'Auto'
+#
+# Now to power on the server in which the profile is on
+#
+- name: Power On the server hardware
+  oneview_server_hardware:
+    config: "{{ config }}"
+    state: power_state_set
+    data:
+        name : "{{ Serv_b4 }}" #The Server HW name
+        powerStateData:
+            powerState: "On"
+            powerControl: "MomentaryPress" #MomentaryPress and PressAndHold are the two options
+  delegate_to: localhost

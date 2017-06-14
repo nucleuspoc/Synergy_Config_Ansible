@@ -1,0 +1,12 @@
+- name: Gather facts about all Volumes
+  oneview_volume_facts:
+    config: "{{ config }}"
+
+- debug: var=storage_volumes
+
+- name: Gather facts about all Volumes
+  oneview_volume_facts:
+    config: "{{ config }}"
+    name: "Volume name"
+
+- debug: var=storage_volumes

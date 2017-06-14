@@ -1,0 +1,75 @@
+- name: Create a basic connection-less server profile template (using names)
+  oneview_server_profile_template:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "AnsibleProfileTemplateTest2"
+      description: "Test Description"
+      serverHardwareTypeName: "{{ Serv_Type480 }}"
+      enclosureGroupName: "{{ Enclosure_Group }}"
+      bootMode:
+        manageMode: True
+        mode: "UEFI"
+      connections:
+        - id: 1
+          name: "DMZ1"
+          functionType: "{{ NET_Eth }}"
+          portId: "Auto"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ DMZ_VLAN }}"
+          boot:
+            priority: "NotBootable"
+        - id: 2
+          name: "FC"
+          functionType: "{{ NET_FC }}"
+          portId: "Auto"
+          requestedMbps: 8000 #8Gb
+          networkName: "{{ SAN-A }}"
+          boot:
+            priority: "NotBootable"
+        - id: 3
+          name: "Man1"
+          functionType: "{{ NET_Eth }}"
+          portId: "Auto"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Man_VLAN }}"
+          boot:
+            priority: "NotBootable"
+        - id: 4
+          name: "Cust1"
+          functionType: "{{ NET_Eth }}"
+          portId: "Auto"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Cust_VLAN }}"
+          boot:
+            priority: "NotBootable"
+      sanStorage:
+        hostOSType: 'Windows 2012 / WS2012 R2'
+        manageSanStorage: true
+        volumeAttachments:
+          - id: 1
+            volumeName: 'Synergy-Test'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool1 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Manual"
+            lun: 0
+            storagePaths:
+              - isEnabled: true
+                connectionId: 2
+                storageTargetType: 'Auto'
+          - id: 2
+            volumeName: 'Synergy-Test-02'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool1 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Manual"
+            lun: 1
+            storagePaths:
+              - isEnabled: true
+                connectionId: 2
+                storageTargetType: 'Auto'
+
+- debug: var=server_profile
+- debug: var=serial_number
+- debug: var=server_hardware
+- debug: var=compliance_preview
+- debug: var=created

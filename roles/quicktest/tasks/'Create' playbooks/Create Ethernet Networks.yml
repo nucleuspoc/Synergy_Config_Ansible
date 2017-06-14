@@ -1,0 +1,69 @@
+- name: Create Ethernet network for VLAN DMZ
+  oneview_ethernet_network:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: '{{ DMZ_VLAN }}'
+      vlanId: '201'
+      privateNetwork: false
+      smartLink: false
+      purpose: Management
+      bandwidth:
+          maximumBandwidth: 20000
+          typicalBandwidth: 2500
+
+- name: Create Ethernet network for VLAN Management
+  oneview_ethernet_network:
+    config: : '{{ config }}'
+    state: present
+    data:
+      name: '{{ MAN_VLAN }}'
+      vlanId: '202'
+      privateNetwork: false
+      smartLink: false
+      purpose: Management
+      bandwidth:
+          maximumBandwidth: 20000
+          typicalBandwidth: 2500
+
+- name: Create Ethernet network for VLAN Customer
+  oneview_ethernet_network:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: '{{ CUST_VLAN }}'
+      vlanId: '203'
+      privateNetwork: false
+      smartLink: false
+      purpose: Management
+      bandwidth:
+          maximumBandwidth: 20000
+          typicalBandwidth: 2500
+
+- name: Create Ethernet network for Management (Synergy)
+  oneview_ethernet_network:
+    config: '{{ config }}'
+    state: present
+    data:
+      name:'{{ MAN_NET }}'
+      vlanId: '1001'
+      privateNetwork: false
+      smartLink: false
+      purpose: Management
+      bandwidth:
+          maximumBandwidth: 20000
+          typicalBandwidth: 2500
+
+- name: Create Ethernet network for Deployment (Synergy)
+  oneview_ethernet_network:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: '{{ DEPLOY_NET }}'
+      vlanId: '1002'
+      privateNetwork: false
+      smartLink: false
+      purpose: Management
+      bandwidth:
+          maximumBandwidth: 20000
+          typicalBandwidth: 2500

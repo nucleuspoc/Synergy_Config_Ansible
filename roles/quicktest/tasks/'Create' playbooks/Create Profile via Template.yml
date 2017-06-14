@@ -1,0 +1,10 @@
+- name: Create a basic connection-less server profile template (using names)
+  oneview_server_profile:
+    config: "{{ config }}"
+    state: "present"
+    data:
+        name: "AnsibleDeployed"
+        description: "Test Description"
+        server_template: "AnsibleProfileTemplateTest101"
+  delegate_to: localhost
+  register: result

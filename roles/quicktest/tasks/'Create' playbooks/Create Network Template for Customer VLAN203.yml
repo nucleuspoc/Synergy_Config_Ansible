@@ -1,0 +1,13 @@
+- name: Ensure that the Ethernet Network is present using the default configuration
+  oneview_ethernet_network:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Cust_VLAN }}"
+      vlanId: '203'
+      privateNetwork: false
+      smartLink: false
+      purpose: Management
+      bandwidth:
+          maximumBandwidth: 20000
+          typicalBandwidth: 2500

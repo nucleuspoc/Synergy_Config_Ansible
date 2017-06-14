@@ -1,0 +1,21 @@
+- name: Create Fibre Channel network
+  oneview_fc_network:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ SAN-A }}"
+      fabricType: 'FabricAttach'
+      linkStabilityTime: '30'
+      autoLoginRedistribution: true
+      managedSanUri: "{{ NET_SAN_A_Uri }}"
+
+- name: Create Fibre Channel network
+  oneview_fc_network:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ SAN-A }}"
+      fabricType: 'FabricAttach'
+      linkStabilityTime: '30'
+      autoLoginRedistribution: true
+      managedSanUri: "{{ NET_SAN_A_Uri }}"

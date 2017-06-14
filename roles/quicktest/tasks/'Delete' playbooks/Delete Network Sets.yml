@@ -1,0 +1,6 @@
+- name: Delete the Network Set
+  oneview_network_set:
+    config: "{{ config }}"
+    state: absent
+    data:
+      name: 'NetworkSet name'

@@ -1,0 +1,12 @@
+- name: Gather facts about all Fibre Channel Networks
+  oneview_fc_network_facts:
+    config: "{{ config }}"
+
+- debug: var=fc_networks
+
+- name: Gather facts about a Fibre Channel Network by name
+  oneview_fc_network_facts:
+    config: "{{ config }}"
+    name: network name
+
+- debug: var=fc_networks

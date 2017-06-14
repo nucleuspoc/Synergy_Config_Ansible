@@ -1,0 +1,6 @@
+- name: Delete the Server Profile Template
+  oneview_server_profile_template:
+    config: "{{ config }}"
+    state: absent
+    data:
+      name: "Server Profile template name"

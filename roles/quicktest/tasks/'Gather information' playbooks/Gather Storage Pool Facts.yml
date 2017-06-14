@@ -1,0 +1,12 @@
+- name: Gather facts about all Storage Pools
+  oneview_storage_pool_facts:
+    config: "{{ config }}"
+
+- debug: var=storage_pools
+
+- name: Gather facts about Storage Pool by name
+  oneview_storage_pool_facts:
+    config: "{{ config }}"
+    name: "storage_pools_name"
+
+- debug: var=storage_pools

@@ -1,0 +1,16 @@
+###
+# This is an example set of variables. If wanting the complete variable set used
+# please contact the Nucleus Synergy POC team
+#
+#
+---
+encl_hostname: ''
+encl_username: ''
+encl_password: ''
+encl_group_uri: ''
+stor_sys_ip_hostname: ''
+stor_sys_username: ''
+stor_sys_password: ''
+Network_Ethernet: ''
+Network_ FibreChannel: ''
+Network_FCoE: ''

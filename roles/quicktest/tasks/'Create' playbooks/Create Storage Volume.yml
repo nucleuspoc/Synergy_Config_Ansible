@@ -1,0 +1,34 @@
+- name: Create ESXi Shared Data Volume
+  oneview_volume:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: 'ESXi-Shared-Vol-Data01'
+      description: 'Data Volume for ESXi'
+      raidLevel: "RAID5"
+      provisioningParameters:
+          provisionType: 'Thin' #Thin or Full
+          shareable: True
+          requestedCapacity: "{{ c500Gb }}"
+          storagePoolUri: "{{ Vol_Stor_Pool5_Uri }}"
+      storageSystemUri: "{{ Vol_Stor_Sys }}"
+      snapshotPoolUri: "{{ Vol_Stor_Pool5_Uri }}"
+  delegate_to: localhost
+
+- name: Create ESXi Shared Log Volume
+  oneview_volume:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: 'ESXi-Shared-Vol-Log-01'
+      description: 'Log volume for share ESXi'
+      raidLevel: "RAID5"
+      provisioningParameters:
+          provisionType: 'Thin' #Thin or Full
+          shareable: True
+          requestedCapacity: "{{ c50GB }}"
+          storagePoolUri: "{{ Vol_Stor_Pool5_Uri }}"
+      storageSystemUri: "{{ Vol_Stor_Sys }}"
+      snapshotPoolUri: "{{ Vol_Stor_Pool5_Uri }}"
+  delegate_to: localhost
+

@@ -1,0 +1,7 @@
+- name: Delete the Storage Volume Template
+  oneview_storage_volume_template:
+    config: "{{ config }}"
+    state: absent
+    data:
+        name: 'Volume Template name'
+  delegate_to: localhost

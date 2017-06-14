@@ -1,0 +1,14 @@
+- name: Gather facts about all Enclosure Groups
+  oneview_enclosure_group_facts:
+    config: "{{ config }}"
+  delegate_to: localhost
+
+- debug: var=enclosure_groups
+
+- name: Gather facts about an Enclosure Group by name
+  oneview_enclosure_group_facts:
+    config: "{{ config }}"
+    name: "Test Enclosure Group Facts"
+  delegate_to: localhost
+
+- debug: var=enclosure_groups

@@ -1,0 +1,18 @@
+- name: Create a Customer Network Set
+  oneview_network_set:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: 'Network-Set-One-Cust'
+      networkUris: #From this point on, choose the networks needed (Ethernet)
+        - "{{ NET_VLANCust_Uri }}"
+
+- name: Create a Customer Network Set
+  oneview_network_set:
+    config: '{{ playbook_dir }}/config.json'
+    state: present
+    data:
+      name: 'Network-Set-One-Man'
+      networkUris: #From this point on, choose the networks needed (Ethernet)
+        - "{{ NET_VLANDMZ_Uri }}"
+        - "{{ NET_VLANMan_Uri }}"

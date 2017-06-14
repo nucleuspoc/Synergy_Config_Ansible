@@ -1,0 +1,25 @@
+- name: Create a Storage System with 3 managed pool
+  oneview_storage_system:
+    config: "{{ config }}"
+    state: present
+    data:
+        credentials:
+            ip_hostname: "{{ STOR_Sys_Host }}"
+            username: "{{ STOR_Sys_Username }}"
+            password: "{{ STOR_Sys_Password }}"
+        managedDomain: NO DOMAIN
+        managedPools:
+          - domain: NO DOMAIN
+            type: StoragePoolV2
+            name: "{{ Vol_Stor_Pool1 }}"
+            deviceType: FC
+          - domain: NO DOMAIN
+            type: StoragePoolV2
+            name: "{{ Vol_Stor_Pool5 }}"
+            deviceType: FC
+          - domain: NO DOMAIN
+            type: StoragePoolV2
+            name: "{{ Vol_Stor_Pool6 }}"
+            deviceType: FC
+
+  delegate_to: localhost

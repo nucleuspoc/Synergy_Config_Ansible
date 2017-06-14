@@ -1,0 +1,6 @@
+- name: Ensure that the Logical Interconnect Group is absent
+  oneview_logical_interconnect_group:
+    config: "{{ config }}"
+    state: absent
+    data:
+      name: 'LIG Name'    
