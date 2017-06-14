@@ -11,3 +11,6 @@ When using a variable file, ensure the variables file is also called 'main.yml' 
 
 NOTE ON CONFIG FILE:
 This file is not on the site for security reasons. If required, please contact the Nucleus Synergy POC team. When recieved, the file should go in the 'top' folder (same location as the site.yml and ansible.cfg files)
+
+TIP:
+If wanting to produce Ansible with multiple functions (example delete multiple ethernet functions), copy the required code and paste directly under and change the relevant details. Ansible will read the playbook and complete the tasks
