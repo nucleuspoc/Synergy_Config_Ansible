@@ -1,4 +1,3 @@
-# Synergy_Config_Ansible
 A group of ansible scripts produced on an account in DXC.technology for OneView in order to configure the Proof of Concept Synergy server
 
 In this GitHub, it holds the structure of files in order for the Ansible playbooks to work.
