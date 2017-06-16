@@ -1,0 +1,5 @@
+- name: Gather facts about all Enclosures
+  oneview_enclosure_facts:
+    config: "{{ config }}"
+    name: "0000A66101"
+- debug: var=enclosures

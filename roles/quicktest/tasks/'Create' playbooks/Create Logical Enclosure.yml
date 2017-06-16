@@ -1,0 +1,27 @@
+- name: Gather facts about all Enclosure Groups
+  oneview_enclosure_group_facts:
+    config: "{{ config }}"
+  delegate_to: localhost
+
+- set_fact: enclosure_group_uri="{{ enclosure_groups[0].uri }}"
+- debug: var=enclosure_group_uri
+#
+#
+- name: Gather facts about all Enclosures
+  oneview_enclosure_facts:
+    config: "{{ config }}"
+    name: "0000A66101"
+
+- set_fact: enclosures_uri="{{ enclosures[0].uri }}"
+- debug: var=enclosures_uri
+#
+#
+- name: Create a Logical Enclosure (available only on HPE Synergy)
+  oneview_logical_enclosure:
+    config: "{{ config }}"
+    state: present
+    data:
+        enclosureUris:
+          - "{{ enclosures_uri }}"
+        enclosureGroupUri: "{{ enclosure_group_uri }}"
+        name: "Encl1"
