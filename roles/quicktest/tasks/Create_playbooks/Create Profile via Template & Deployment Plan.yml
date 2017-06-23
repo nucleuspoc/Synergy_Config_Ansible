@@ -1,3 +1,9 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+  
 - name: Create a basic connection-less server profile template (using names)
   oneview_server_profile:
     config: "{{ config }}"
@@ -30,6 +36,6 @@
             -  name: ManagementNIC.ipaddress
                value: "{{ IP_Address }}"
             -  name: ManagementNIC.gateway
-               value: "{{ IP_Gateway }}"                 
+               value: "{{ IP_Gateway }}"
 #  delegate_to: localhost
  # register: result

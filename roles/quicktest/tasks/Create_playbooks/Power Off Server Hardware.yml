@@ -1,3 +1,9 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+  
 - name: Power Off the server hardware
   oneview_server_hardware:
     config: "{{ config }}"

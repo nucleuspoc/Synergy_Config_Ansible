@@ -1,19 +1,24 @@
-- name: Gather facts about all Enclosure Groups
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+  
+- name: Gather facts about Enclosure Groups
   oneview_enclosure_group_facts:
     config: "{{ config }}"
+    name: "{{ Enclosure_Group }}"
   delegate_to: localhost
 
 - set_fact: enclosure_group_uri="{{ enclosure_groups[0].uri }}"
-- debug: var=enclosure_group_uri
 #
 #
-- name: Gather facts about all Enclosures
+- name: Gather facts and store enclosure information
   oneview_enclosure_facts:
     config: "{{ config }}"
-    name: "0000A66101"
+    name: "{{ Enclosure }}"
 
 - set_fact: enclosures_uri="{{ enclosures[0].uri }}"
-- debug: var=enclosures_uri
 #
 #
 - name: Create a Logical Enclosure (available only on HPE Synergy)
@@ -24,4 +29,4 @@
         enclosureUris:
           - "{{ enclosures_uri }}"
         enclosureGroupUri: "{{ enclosure_group_uri }}"
-        name: "Encl1"
+        name: "{{ Logical_Encl }}"

@@ -1,0 +1,49 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+#
+#
+#
+- name: Gather facts about VLAN DMZ Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ DMZ_VLAN }}"
+
+- set_fact: NET_VLANDMZ_Uri="{{ ethernet_networks[0].uri }}"
+#
+- name: Gather facts about VLAN Management Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ Man_VLAN }}"
+
+- set_fact: NET_VLANMan_Uri="{{ ethernet_networks[0].uri }}"
+#
+- name: Gather facts about VLAN Customer Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ Cust_VLAN }}"
+
+- set_fact: NET_VLANCust_Uri="{{ ethernet_networks[0].uri }}"
+#
+# Create Network sets
+#
+- name: Create a Customer Network Set
+  oneview_network_set:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: 'Network-Set-One-Cust'
+      networkUris: #From this point on, choose the networks needed (Ethernet)
+        - "{{ NET_VLANCust_Uri }}"
+
+- name: Create a Customer Network Set
+  oneview_network_set:
+    config: '{{ playbook_dir }}/config.json'
+    state: present
+    data:
+      name: 'Network-Set-One-Man'
+      networkUris: #From this point on, choose the networks needed (Ethernet)
+        - "{{ NET_VLANDMZ_Uri }}"
+        - "{{ NET_VLANMan_Uri }}"

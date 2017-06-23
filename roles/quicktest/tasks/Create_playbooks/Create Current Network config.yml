@@ -1,3 +1,9 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+
 - name: Create Ethernet network for VLAN DMZ
   oneview_ethernet_network:
     config:'{{ config }}'
@@ -67,6 +73,22 @@
       bandwidth:
           maximumBandwidth: 20000
           typicalBandwidth: 2500
+#
+- name: Gather facts about SAN A
+  oneview_managed_san_facts:
+    config: "{{ config }}"
+    name: "{{ NET_SAN_A }}"
+  delegate_to: localhost
+
+- set_fact: SAN_A_Uri="{{ managed_sans[0].uri }}"
+#
+- name: Gather facts about SAN B
+  oneview_managed_san_facts:
+    config: "{{ config }}"
+    name: "{{ NET_SAN_B }}"
+  delegate_to: localhost
+
+- set_fact: SAN_B_Uri="{{ managed_sans[0].uri }}"
 
 - name: Create Fibre Channel network
   oneview_fc_network:

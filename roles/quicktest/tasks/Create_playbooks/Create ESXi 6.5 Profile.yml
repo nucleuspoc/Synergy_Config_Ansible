@@ -1,3 +1,9 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+
 - name: Create an ESXi 6.5 profile
   oneview_server_profile:
     config: "{{ config }}"
@@ -37,7 +43,7 @@
           -  name: ManagementNIC.gateway
              value: "{{ IP_Gateway }}"
 #
-# Boot mode is requred         
+# Boot mode is requred
 #
       bootMode:
         manageMode: True
@@ -46,7 +52,7 @@
 # Next is the BIOS. If BIOS is needed, managebios needs to be True otherwise do not put the code in...default is false. The over-ridden settings are the items changed from the default
 #
       bios:
-        manageBios: "true"        
+        manageBios: "true"
         overriddenSettings:
           - id: "PowerRegulator"
             value: "StaticHighPerf"
@@ -83,7 +89,6 @@
         - id: 4
           name: "Net-VLAN202-Man-B"
           functionType: "Ethernet"
-#          portId: "Mezz 6:1-a"
           portId: "Auto"
           requestedMbps: 2500 #2.5Gb
           networkName: "{{ Man_VLAN }}"
@@ -92,7 +97,6 @@
         - id: 5
           name: "Cust-A"
           functionType: "Ethernet"
-#          portId: "Mezz 6:2-a"
           portId: "Auto"
           requestedMbps: 2500 #2.5Gb
           networkName: "{{ Cust_VLAN }}"
@@ -111,7 +115,7 @@
           functionType: "FibreChannel"
           portId: "Mezz 3:1-b"
           requestedMbps: 2500 #2.5Gb
-          networkName: "{{ SAN-A }}"
+          networkName: "{{ SAN_A }}"
           boot:
             priority: "NotBootable"
         - id: 8
@@ -119,11 +123,11 @@
           functionType: "FibreChannel"
           portId: "Mezz 3:2-b"
           requestedMbps: 2500 #2.5Gb
-          networkName: "{{ SAN-B }}"
+          networkName: "{{ SAN_B }}"
           boot:
-            priority: "NotBootable" 
+            priority: "NotBootable"
 #
-#SAN Storage. The LUN starts at 0 with increments of 1. the names are important, its what the SAN was labelled as in Volumes.                                                             
+#SAN Storage. The LUN starts at 0 with increments of 1. the names are important, its what the SAN was labelled as in Volumes.
 #
       sanStorage:
         hostOSType: 'VMware (ESXi)'

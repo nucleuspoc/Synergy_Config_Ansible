@@ -1,3 +1,55 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+#
+# Gather uri's for the following networks and save as a local uri
+#
+- name: Gather facts about SAN A Fibre Channel Network
+  oneview_fc_network_facts:
+    config: "{{ config }}"
+    name: "{{ NET_SAN_A }}"
+
+- set_fact: NET_SAN_A_Uri="{{ fc_networks[0].uri }}"
+
+- name: Gather facts about SAN B Fibre Channel Network
+  oneview_fc_network_facts:
+    config: "{{ config }}"
+    name: "{{ NET_SAN_B }}"
+
+- set_fact: NET_SAN_B_Uri="{{ fc_networks[0].uri }}"
+
+- name: Gather facts about Deploy Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ Deploy_NET }}"
+
+- set_fact: NET_Deploy_Uri="{{ ethernet_networks[0].uri }}"
+
+- name: Gather facts about VLAN DMZ Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ DMZ_VLAN }}"
+
+- set_fact: NET_VLANDMZ_Uri="{{ ethernet_networks[0].uri }}"
+
+- name: Gather facts about VLAN Management Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ Man_VLAN }}"
+
+- set_fact: NET_VLANMan_Uri="{{ ethernet_networks[0].uri }}"
+
+- name: Gather facts about VLAN Customer Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ Cust_VLAN }}"
+
+- set_fact: NET_VLANCust_Uri="{{ ethernet_networks[0].uri }}"
+#
+# Produce LIGS
+#
 - name: Ensure that the Logical Interconnect Group is present
   oneview_logical_interconnect_group:
     config: "{{ config }}"
@@ -135,7 +187,7 @@
                     - relativeValue: "{{ Port_Eth_FCoE_Q4:1 }}" #Ethernet + FCoE Capability
                       type: "Port"
                     - relativeValue: 1
-                      type: "Enclosure"                                                                  
+                      type: "Enclosure"
           name: "LAN-UplinkSet"
           mode: "Auto"
           networkType: "Ethernet" #Ethernet / FibreChannel are the options

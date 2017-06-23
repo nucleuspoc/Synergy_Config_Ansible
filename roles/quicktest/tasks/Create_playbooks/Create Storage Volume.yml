@@ -1,0 +1,57 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+#
+# gather Uri information and store as a local variable
+#
+- name: Gather facts about FC_r5
+  oneview_storage_pool_facts:
+    config: "{{ config }}"
+    name: "FC_r5"
+
+- set_fact: Vol_Stor_Pool5_uri="{{ storage_pools[0].uri }}"
+
+- name: Gather facts about Storage System
+  oneview_storage_system_facts:
+    config: "{{ config }}"
+  delegate_to: localhost
+
+- set_fact: Vol_Stor_Sys_Uri="{{ storage_systems[0].uri }}"
+#
+# Volume creation
+#
+- name: Create ESXi Shared Data Volume
+  oneview_volume:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: 'ESXi-Shared-Vol-Data01'
+      description: 'Data Volume for ESXi'
+      raidLevel: "RAID5"
+      provisioningParameters:
+          provisionType: 'Thin' #Thin or Full
+          shareable: True
+          requestedCapacity: "{{ c500Gb }}"
+          storagePoolUri: "{{ Vol_Stor_Pool5_uri }}"
+      storageSystemUri: "{{ Vol_Stor_Sys_Uri }}"
+      snapshotPoolUri: "{{ Vol_Stor_Pool5_uri }}"
+  delegate_to: localhost
+
+- name: Create ESXi Shared Log Volume
+  oneview_volume:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: 'ESXi-Shared-Vol-Log-01'
+      description: 'Log volume for share ESXi'
+      raidLevel: "RAID5"
+      provisioningParameters:
+          provisionType: 'Thin' #Thin or Full
+          shareable: True
+          requestedCapacity: "{{ c50Gb }}"
+          storagePoolUri: "{{ Vol_Stor_Pool5_uri }}"
+      storageSystemUri: "{{ Vol_Stor_Sys_Uri }}"
+      snapshotPoolUri: "{{ Vol_Stor_Pool5_uri }}"
+  delegate_to: localhost

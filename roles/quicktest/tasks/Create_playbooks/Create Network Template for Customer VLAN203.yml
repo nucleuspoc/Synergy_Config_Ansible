@@ -1,3 +1,9 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+  
 - name: Ensure that the Ethernet Network is present using the default configuration
   oneview_ethernet_network:
     config: "{{ config }}"

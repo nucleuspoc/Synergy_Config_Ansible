@@ -1,3 +1,8 @@
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
 #
 # First need to setup the SAN
 #
@@ -204,21 +209,21 @@
   oneview_ethernet_network_facts:
     config: "{{ config }}"
     name: "{{ DMZ_VLAN }}"
-    
+
 - set_fact: NET_VLANDMZ_Uri="{{ ethernet_networks[0].uri }}"
 ##
 - name: Gather facts about San A network & Store variable
   oneview_fc_network_facts:
     config: "{{ config }}"
     name: "{{ NET_SAN_A }}"
-    
+
 - set_fact: NET_SAN_A_Uri="{{ fc_networks[0].uri }}"
 ##
 - name: Gather facts about San A network & Store variable
   oneview_fc_network_facts:
     config: "{{ config }}"
     name: "{{ NET_SAN_B }}"
-    
+
 - set_fact: NET_SAN_B_Uri="{{ fc_networks[0].uri }}"
 #
 # Produce LIG
@@ -375,7 +380,7 @@
   oneview_logical_interconnect_group_facts:
     config: "{{ config }}"
     name: "SYN-DBPOC-LIG"
-    
+
 - set_fact: LIG_Uri="{{ logical_interconnect_groups[0].uri }}"
 #
 # Create Enclosure Group
@@ -405,7 +410,7 @@
 # IP Section: Uri is the Management IP added in settings...NOT in Networks
 #
       ipAddressingMode: "IpPool"
-      ipRangeUris: 
+      ipRangeUris:
         - "{{ IP_Range_Uri }}"
 #
 # OS Deploment Settings
