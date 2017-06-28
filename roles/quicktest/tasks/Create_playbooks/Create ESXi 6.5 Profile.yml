@@ -7,9 +7,9 @@
 - name: Gather facts about VLAN DMZ Network
   oneview_ethernet_network_facts:
     config: "{{ config }}"
-    name: "{{ DMZ_VLAN }}"
+    name: "{{ DMZ_Man }}"
 
-- set_fact: NET_VLANDMZ_Uri="{{ ethernet_networks[0].uri }}"
+- set_fact: NET_VLANMan_Uri="{{ ethernet_networks[0].uri }}"
 
 - name: Create an ESXi 6.5 profile
   oneview_server_profile:
@@ -36,7 +36,7 @@
           -  name: ManagementNIC.ipv4disable
              value: false
           -  name: ManagementNIC.networkuri
-             value: "{{ NET_VLANDMZ_Uri }}"
+             value: "{{ NET_VLANMan_Uri }}"
           -  name: ManagementNIC.constraint
              value: "userspecified"
           -  name: ManagementNIC.dns1
