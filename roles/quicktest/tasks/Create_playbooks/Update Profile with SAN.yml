@@ -1,0 +1,88 @@
+#
+# Before Adding a Volume to a profile, the server profile needs to be created
+#
+# When updating the profile, The server hardware needs to be powered off first, otherwise the change will not work and a
+# red error will appear. Ensure the variable has been changed depending on the bay the profile is on
+#
+# Then we need to add the new Volume. PLEASE NOTE: The script for the original Volume needs to also be in here. Otherwise the playbook will
+# over-write and remove the existing SAN with the new. So in this below example, the only NEW Volume is id 3 but we need to add the others in
+# so it will not get removed
+#
+# Once all Volumes have been added, the Server hardware needs to be powered on. Please edit this bay also to reflect which one the
+# profile is on
+#
+#
+
+- name: Power Off the server hardware
+  oneview_server_hardware:
+    config: "{{ config }}"
+    state: power_state_set
+    data:
+        name : "{{ Serv_b1 }}" #Choose a bay and server to turn on
+        powerStateData:
+            powerState: "Off"
+            powerControl: "MomentaryPress"
+  delegate_to: localhost
+
+
+- name: Update Profile with Storage volume
+  oneview_server_profile:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: 'JoeTestTemplate'
+      sanStorage:
+        hostOSType: 'VMware (ESXi)'
+        manageSanStorage: true
+        volumeAttachments:
+          - id: 1
+            volumeName: 'ESXi-Shared-Vol-Data01'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool5 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Manual"
+            lun: 0
+            storagePaths:
+              - isEnabled: true
+                connectionId: 7 #SAN-A network id
+                storageTargetType: 'Auto'
+              - isEnabled: true
+                connectionId: 8 #SAN-B network id
+                storageTargetType: 'Auto'
+          - id: 2
+            volumeName: 'ESXi-Shared-Vol-Log-01'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool5 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Manual"
+            lun: 1
+            storagePaths:
+              - isEnabled: true
+                connectionId: 7 #SAN-A network id
+                storageTargetType: 'Auto'
+              - isEnabled: true
+                connectionId: 8 #SAN-B network id
+                storageTargetType: 'Auto'
+          - id: 3
+            volumeName: 'Private Volume for OS'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool5 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Manual"
+            lun: 2
+            storagePaths:
+              - isEnabled: true
+                connectionId: 7 #SAN-A network id
+                storageTargetType: 'Auto'
+              - isEnabled: true
+                connectionId: 8 #SAN-B network id
+                storageTargetType: 'Auto'
+  delegate_to: localhost
+
+- name: Power On the server hardware
+  oneview_server_hardware:
+    config: "{{ config }}"
+    state: power_state_set
+    data:
+        name : "{{ Serv_b1 }}" #Choose a bay and server to turn on
+        powerStateData:
+            powerState: "On"
+            powerControl: "MomentaryPress"
+  delegate_to: localhost

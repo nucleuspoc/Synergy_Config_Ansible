@@ -1,8 +1,9 @@
-- name: Include all variable files
-  include_vars:
-    dir: 'vars' #change directory if needed
-    extensions:
-        - yml
+- name: Gather facts about VLAN DMZ Network
+  oneview_ethernet_network_facts:
+    config: "{{ config }}"
+    name: "{{ Man_VLAN }}"
+
+- set_fact: NET_VLANMan_Uri="{{ ethernet_networks[0].uri }}"
 
 - name: Gather facts about VLAN DMZ Network
   oneview_ethernet_network_facts:
@@ -18,8 +19,8 @@
     data:
       name: "AnsibleProfileTemplateTest101"
       description: "Test Description"
-      server_hardware: "{{ Serv_b4 }}"
-      serverHardwareTypeName: "{{ Serv_Type480 }}"
+      server_hardware: "{{ Serv_b2 }}"
+      serverHardwareTypeName: "{{ Serv_Type660 }}"
       enclosureGroupName: "{{ Enclosure_Group }}"
 #
 # This function of code is for the image streamer. If not needed, remove
@@ -29,6 +30,8 @@
         osCustomAttributes:
           -  name: Hostname
              value: "esxi01"
+          -  name: DomainName
+             value: dbpoc.uk
           -  name: ManagementNIC.connectionid
              value: 2
           -  name: ManagementNIC.dhcp
@@ -96,6 +99,7 @@
         - id: 4
           name: "Net-VLAN202-Man-B"
           functionType: "Ethernet"
+#          portId: "Mezz 6:1-a"
           portId: "Auto"
           requestedMbps: 2500 #2.5Gb
           networkName: "{{ Man_VLAN }}"
@@ -104,6 +108,7 @@
         - id: 5
           name: "Cust-A"
           functionType: "Ethernet"
+#          portId: "Mezz 6:2-a"
           portId: "Auto"
           requestedMbps: 2500 #2.5Gb
           networkName: "{{ Cust_VLAN }}"
@@ -174,7 +179,7 @@
     config: "{{ config }}"
     state: power_state_set
     data:
-        name : "{{ Serv_b4 }}" #The Server HW name
+        name : "{{ Serv_b2 }}" #The Server HW name
         powerStateData:
             powerState: "On"
             powerControl: "MomentaryPress" #MomentaryPress and PressAndHold are the two options

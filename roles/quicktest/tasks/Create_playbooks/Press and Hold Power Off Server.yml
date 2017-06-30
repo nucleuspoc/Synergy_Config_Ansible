@@ -1,9 +1,3 @@
-- name: Include all variable files
-  include_vars:
-    dir: 'vars' #change directory if needed
-    extensions:
-        - yml
-  
 - name: Power Off the server hardware
   oneview_server_hardware:
     config: "{{ config }}"
@@ -12,5 +6,5 @@
         name : "{{ Serv_b5 }}" #Choose a bay to turn off
         powerStateData:
             powerState: "Off"
-            powerControl: "PressAndHold" #MomentaryPress and PressAndHold are the two options
+            powerControl: "PressAndHold"
   delegate_to: localhost
