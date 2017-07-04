@@ -1,4 +1,4 @@
-- name: Power On the server hardware
+- name: Power Off the server hardware
   oneview_server_hardware:
     config: "{{ config }}"
     state: power_state_set
