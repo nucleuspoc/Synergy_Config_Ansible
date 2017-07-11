@@ -1,0 +1,126 @@
+# Include all variable files in the vars folder
+#
+- name: Include all variable files
+  include_vars:
+    dir: 'vars' #change directory if needed
+    extensions:
+        - yml
+#
+# Begin the creation of profile
+#
+- name: Create Profile with Local Storage
+  oneview_server_profile:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "Tom-Test-Profile"
+      description: "Test Description"
+      server_hardware: "{{ Serv_b3 }}"
+      serverHardwareTypeName: "{{ Serv_Type480 }}"
+      enclosureGroupName: "{{ Enclosure_Group }}"
+#
+# Boot mode and Setting are requred         
+#
+      bootMode:
+        manageMode: True
+        mode: "UEFI"
+        pxeBootPolicy: "Auto"
+      boot:
+        manageBoot: True
+        order: 
+        - "HardDisk"
+#
+# BIOS. 
+# If BIOS is needed, managebios needs to be True otherwise default is false. 
+# The over-written settings are the items changed from the default
+#
+      bios:
+        manageBios: "true"        
+        overriddenSettings:
+          - id: "PowerRegulator"
+            value: "StaticHighPerf"
+          - id: "MinProcIdlePkgState"
+            value: "NoState"
+          - id: "MinProcIdlePower"
+            value: "NoCStates"
+          - id: "PowerProfile"
+            value: "MaxPerf"
+          - id: "IntelQpiPowerManagement"
+            value: "Disabled"
+          - id: "EnergyPerfBias"
+            value: "MaxPerf"
+          - id: "VirtualInstallDisk"
+            value: "Enabled"
+#
+# Network connections. 
+# FC networks are required for the SAN storages
+#
+      connections:
+        - id: 1
+          name: "Deployment Network A"
+          functionType: "Ethernet"
+          portId: "Mezz 3:1-a"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Deploy_NET }}"
+          boot:
+            priority: "Primary" #used as it is an iSCSi network
+        - id: 2
+          name: "Net-VLAN202-Man-A"
+          functionType: "Ethernet"
+          portId: "Mezz 3:2-a"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ Man_VLAN }}"
+          boot:
+            priority: "NotBootable"
+        - id: 3
+          name: "SAN-A"
+          functionType: "FibreChannel"
+          portId: "Mezz 3:1-b"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ SAN_A }}"
+          boot:
+            bootVolumeSource: "ManagedVolume"
+            priority: "Primary"
+        - id: 4
+          name: "SAN-B"
+          functionType: "FibreChannel"
+          portId: "Mezz 3:2-b"
+          requestedMbps: 2500 #2.5Gb
+          networkName: "{{ SAN_B }}"
+          boot:
+            bootVolumeSource: "ManagedVolume"
+            priority: "Secondary" 
+#
+#SAN Storage. The LUN starts at 0 with increments of 1. the names are important, its what the SAN was labelled as in Volumes.                                                             
+#
+      sanStorage:
+        hostOSType: 'VMware (ESXi)'
+        manageSanStorage: true
+        volumeAttachments:
+          - id: 1
+            volumeName: 'Private Volume for OS'
+            volumeStoragePoolName: "{{ Vol_Stor_Pool5 }}"
+            volumeStorageSystemName: "{{ Vol_Stor_Sys }}"
+            lunType: "Auto"
+            lun: 0
+            isBootVolume: "true"
+            storagePaths:
+              - isEnabled: true
+                connectionId: 3 #SAN-A
+                storageTargetType: 'Auto'
+              - isEnabled: true
+                connectionId: 4 #SAN-B
+                storageTargetType: 'Auto'
+#
+# Power on Server Profile
+#
+#- name: Power On the server hardware
+#  oneview_server_hardware:
+#    config: "{{ config }}"
+#    state: power_state_set
+#    data:
+#        name : "{{ Serv_b3 }}" #The Server HW name
+#        powerStateData:
+#            powerState: "On"
+#            powerControl: "MomentaryPress" #MomentaryPress and PressAndHold are the two options
+#  delegate_to: localhost

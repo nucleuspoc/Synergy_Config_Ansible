@@ -1,12 +1,3 @@
-- name: Include all variable files
-  include_vars:
-    dir: 'vars' #change directory if needed
-    extensions:
-        - yml
-  
-#
-# This Profile creation is for local storage and setting it as a PXE boot
-#
 - name: Create Profile with Local Storage
   oneview_server_profile:
     config: "{{ config }}"
@@ -14,8 +5,8 @@
     data:
       name: "AnsibleProfileTemplateTest101"
       description: "Test Description"
-      server_hardware: "{{ Serv_b2 }}"
-      serverHardwareTypeName: "{{ Serv_Type660 }}"
+      server_hardware: "{{ Serv_b3 }}"
+      serverHardwareTypeName: "{{ Serv_Type480 }}"
       enclosureGroupName: "{{ Enclosure_Group }}"
 #
 # Boot mode is requred
@@ -56,8 +47,8 @@
         controllers:
           - deviceSlot: "Embedded"
             mode: "RAID"
-            initialize: False
-            importConfiguration: false
+            initialize: False #Initialize storage on next profile
+            importConfiguration: false #Import existing logical Drives
             logicalDrives:
               - name: "Test"
                 raidLevel: "RAID1"

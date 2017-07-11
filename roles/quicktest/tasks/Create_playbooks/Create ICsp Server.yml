@@ -1,0 +1,22 @@
+- name: Gather facts about a Server Hardware by name
+  oneview_server_hardware_facts:
+    config:  "{{ config }}"
+    name: "{{ Serv_b3 }}"
+  delegate_to: localhost
+
+- set_fact: Serv_Bay_ip="{{ server_hardwares[0].mpHostInfo.mpIpAddresses[1].address }}"
+- debug: var=Serv_Bay_ip
+
+- name: Ensure the server is registered in ICsp
+  hpe_icsp_server:
+    icsp_host: "10.0.4.8"
+    username: "HPAdmin"
+    password: "HP1nvent"
+    server_ipAddress: "{{ Serv_Bay_ip }}"
+    server_username: "Admin"
+    server_password: "Start123"
+    state: present
+#    server_personality_data:
+#      name: "hpsa_netconfig"
+#      value: {"hostname":"icsptest"}
+  delegate_to: localhost

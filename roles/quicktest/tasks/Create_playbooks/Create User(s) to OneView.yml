@@ -1,0 +1,23 @@
+---
+- name: Ensure that the User is present using the default configuration
+  oneview_user:
+    config: "{{ config }}"
+    state: present
+    data:
+      enabled: true
+      category: "users"
+      fullName: "Thomas Hopper"
+      userName: "hoppert"
+      password: "password01"
+      emailAddress: "thomas.hopper@dxc.com" # Optional
+      mobilePhone: "+ 44(0) 123 456" # Optional
+      officePhone: "+ 44(0) 456 789" # Optional
+## The Roles can be multiple. If needing all roles, select Infrastructure Admin. If Read only, only use that one. If needing Specified roles, use the rest
+      roles: 
+        - "Infrastructure administrator"
+#        - "Read only"
+#        - "Server administrator"
+#        - "Backup administrator"
+#        - "Network administrator"
+#        - "Storage administrator"
+#        - "Software administrator"

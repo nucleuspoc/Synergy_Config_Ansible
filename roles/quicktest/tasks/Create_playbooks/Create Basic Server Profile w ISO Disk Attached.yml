@@ -19,7 +19,7 @@
       serverHardwareTypeName: "{{ Serv_Type480 }}"
       enclosureGroupName: "{{ Enclosure_Group }}"
 #
-# Boot mode and Setting are requred         
+# Boot mode and Setting are requred
 #
       bootMode:
         manageMode: True
@@ -27,15 +27,15 @@
         pxeBootPolicy: "Auto"
       boot:
         manageBoot: True
-        order: 
+        order:
         - "HardDisk"
 #
-# BIOS. 
-# If BIOS is needed, managebios needs to be True otherwise default is false. 
+# BIOS.
+# If BIOS is needed, managebios needs to be True otherwise default is false.
 # The over-written settings are the items changed from the default
 #
       bios:
-        manageBios: "true"        
+        manageBios: "true"
         overriddenSettings:
           - id: "PowerRegulator"
             value: "StaticHighPerf"
@@ -58,8 +58,8 @@
         controllers:
           - deviceSlot: "Embedded"
             mode: "RAID"
-            initialize: False
-            importConfiguration: false
+            initialize: False #Initialize storage on next profile
+            importConfiguration: false #Import existing logical Drives
             logicalDrives:
               - name: "Test"
                 raidLevel: "RAID1"
@@ -67,7 +67,7 @@
                 driveTechnology: "SasHdd"
                 bootable: true
 #
-# Network connections. 
+# Network connections.
 # FC networks are required for the SAN storages
 #
       connections:
