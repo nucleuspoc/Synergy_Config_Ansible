@@ -30,7 +30,7 @@
           functionType: "{{ NET_FC }}"
           portId: "Auto"
           requestedMbps: 8000 #8Gb
-          networkName:  "{{ Net_SAN_A }}"
+          networkName:  "{{ NET_SAN_A }}"
           boot:
             priority: "NotBootable"
         - id: 3
@@ -38,7 +38,7 @@
           functionType: "{{ NET_Eth }}"
           portId: "Auto"
           requestedMbps: 2500 #2.5Gb
-          networkName: "Deployment"
+          networkName: "{{ Deploy_NET }}"
           boot:
             priority: "Primary"
       sanStorage:
