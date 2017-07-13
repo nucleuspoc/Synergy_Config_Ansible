@@ -30,7 +30,7 @@
           functionType: "{{ NET_FC }}"
           portId: "Auto"
           requestedMbps: 8000 #8Gb
-          networkName:  "{{ SAN-A }}"
+          networkName:  "{{ SAN_A }}"
           boot:
             priority: "NotBootable"
         - id: 3
