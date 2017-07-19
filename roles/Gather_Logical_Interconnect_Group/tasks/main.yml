@@ -1,6 +1,0 @@
-- name: Gather facts about all Logical Interconnect Groups
-  oneview_logical_interconnect_group_facts:
-#    config: "{{ config }}"
-    name: "{{ LIG_name }}"
-
-- debug: var=logical_interconnect_groups

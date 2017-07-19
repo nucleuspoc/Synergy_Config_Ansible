@@ -1,6 +1,0 @@
-- name: Ensure that Enclosure Group is absent
-  oneview_enclosure_group:
-#    config: "{{ config }}"
-    state: absent
-    data:
-      name: "{{ Enclosure_Group }}"
