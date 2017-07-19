@@ -2,4 +2,5 @@
 - hosts: all
   connection: local
   roles:
-    - {role: Create_Private_Storage_Volume}
+#    - {role: Create_Private_Storage_Volume}
+    - {role: Gather_Volumes}
