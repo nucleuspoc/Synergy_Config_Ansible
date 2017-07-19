@@ -3,4 +3,4 @@
   connection: local
   roles:
 #    - {role: Create_Private_Storage_Volume}
-    - {role: Gather_Volumes}
+    - {role: Gather Volumes}
