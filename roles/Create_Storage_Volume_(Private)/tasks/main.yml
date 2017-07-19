@@ -7,7 +7,7 @@
 - name: Gather facts about all Storage Systems
   oneview_storage_system_facts:
 #    config: "{{ config }}"
-  delegate_to: localhost
+#  delegate_to: localhost
 - set_fact: Vol_Stor_Sys_Uri="{{ storage_systems[0].uri }}"
 
 - name: Create Private Volume
