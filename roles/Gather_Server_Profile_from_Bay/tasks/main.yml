@@ -1,0 +1,7 @@
+- name: Gather facts about all Server Hardwares
+  oneview_server_hardware_facts:
+#    config: "{{ config }}"
+    name :  "{{ Serv_b1 }}"
+  delegate_to: localhost
+
+- debug: var=server_hardwares

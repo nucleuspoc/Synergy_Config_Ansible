@@ -1,0 +1,8 @@
+---
+- name: Update password to a specific user
+  oneview_user:
+#    config: "{{ config }}"
+    state: set_password
+    data:
+      userName: "{{ User_Username }}"
+      password: "{{ User_Password }}"
