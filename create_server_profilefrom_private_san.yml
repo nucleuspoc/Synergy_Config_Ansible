@@ -1,0 +1,5 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - {role: Create_Server_Profile_from_Private_SAN}

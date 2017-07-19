@@ -1,0 +1,5 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - {role: Attach_disk_to_ILO}

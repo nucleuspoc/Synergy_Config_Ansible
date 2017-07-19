@@ -1,5 +1,0 @@
-Here is where the required ansible playbook will be placed or copied onto
-
-REMEMBER:
-
-Rename the file to 'main.yml' otherwise it will not read :)

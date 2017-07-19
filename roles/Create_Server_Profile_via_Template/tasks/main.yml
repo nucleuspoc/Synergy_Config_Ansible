@@ -1,0 +1,10 @@
+- name: Create a basic connection-less server profile template (using names)
+  oneview_server_profile:
+#    config: "{{ config }}"
+    state: "present"
+    data:
+        name: "{{ Prof_Name }}"
+        description: "{{ Prof_Description }}"
+        server_template: "{{ Prof_Tem_Name }}"
+  delegate_to: localhost
+  register: result

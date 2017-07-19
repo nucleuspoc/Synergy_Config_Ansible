@@ -1,0 +1,6 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - {role: Create_Server_Profile_with_Local_Storage}
+    - {role: Attach_disk_to_ILO}

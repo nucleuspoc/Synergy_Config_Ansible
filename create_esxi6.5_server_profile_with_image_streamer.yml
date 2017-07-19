@@ -1,0 +1,5 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - {role: Create_ESXi_6.5_Profile}

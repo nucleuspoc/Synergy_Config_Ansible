@@ -1,0 +1,7 @@
+---
+- name: Remove User from Oneview
+  oneview_user:
+#    config: "{{ config }}"
+    state: absent
+    data:
+      userName: "{{ User_Username }}"

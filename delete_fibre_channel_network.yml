@@ -1,0 +1,7 @@
+---
+
+- hosts: all
+  connection: local
+  gather_facts: True
+  roles:
+    - {role: Delete_Fibre_Channel_Network}

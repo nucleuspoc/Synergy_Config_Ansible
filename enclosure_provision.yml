@@ -1,0 +1,13 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - {role: Create_User}
+    - {role: Create_SAN_Manager}
+    - {role: Create_Storage_System_with_Pools}
+    - {role: Create_Current_Network_Setup}
+    - {role: Create_Network_Sets}
+    - {role: Gather_all_Network_Uris}
+    - {role: Create_Logical_Interconnect_Group}
+    - {role: Create_Enclosure_Group}
+    - {role: Create_Logical_Enclosure}

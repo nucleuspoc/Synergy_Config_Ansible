@@ -1,0 +1,5 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - {role: Create_Shareable_Volume}
