@@ -1,0 +1,5 @@
+---
+- hosts: all
+  connection: local
+  roles:
+    - {role: Press_and_Hold_Power_Off_Server}
