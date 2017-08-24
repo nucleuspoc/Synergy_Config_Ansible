@@ -1,0 +1,7 @@
+- name: Remove Subnet link from '{{ NET_Eth_Name }}' Network
+  oneview_ethernet_network:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: "{{ NET_Eth_Name }}"
+      subnetUri:

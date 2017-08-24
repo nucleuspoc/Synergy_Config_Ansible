@@ -1,0 +1,47 @@
+---
+- name: Gather facts about '{{ Subnet_Name }}' IPV4 Subnet
+  oneview_id_pools_ipv4_subnet_facts:
+    config: "{{ config }}"
+    name: "{{ Subnet_Name }}"
+- set_fact: subnet_uri="{{ id_pools_ipv4_subnets[0].uri }}"
+#
+#
+#
+- name: Ensure the IPv4 '{{ Range_Name }}' Range is disabled
+  oneview_id_pools_ipv4_range:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Range_Name }}"
+      subnetUri: "{{ subnet_uri }}"
+      enabled: false
+  delegate_to: localhost
+#
+#
+#
+- name: Delete Ipv4 '{{ Range_Name }}' Range
+  oneview_id_pools_ipv4_range:
+    config: '{{ config }}'
+    state: absent
+    data:
+      name: "{{ Range_Name }}"
+      subnetUri: "{{ subnet_uri }}"
+#
+#
+#
+- name: Remove '{{ NET_Eth_Name }}' Network from Subnet
+  oneview_ethernet_network:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: "{{ NET_Eth_Name }}"
+      subnetUri:
+#
+#
+#
+- name: Delete '{{ Subnet_Name }}' Subnet
+  oneview_id_pools_ipv4_subnet:
+    config: "{{ config }}"
+    state: absent
+    data:
+      name: "{{ Subnet_Name }}"

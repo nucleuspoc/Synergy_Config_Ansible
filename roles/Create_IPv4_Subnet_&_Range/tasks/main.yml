@@ -1,0 +1,46 @@
+---
+- name: Add IPv4 '{{ Subnet_Name }}' Subnet
+  oneview_id_pools_ipv4_subnet:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Subnet_Name }}"
+      type: "Subnet"
+      networkId: "{{ SubnetID }}" #Subnet ID in OneView
+      subnetmask: "{{ SubnetMask }}"
+      gateway: "{{ IPv4_Gateway }}"
+      domain: "{{ IPv4_Domain }}"
+      dnsServers: []
+  delegate_to: localhost
+#
+#
+- name: Gather facts about '{{ Subnet_Name }}' IPV4 Subnets
+  oneview_id_pools_ipv4_subnet_facts:
+    config: "{{ config }}"
+    name: "{{ Subnet_Name }}"
+- set_fact: subnet_uri="{{ id_pools_ipv4_subnets[0].uri }}"
+#
+#
+- name: Add IPv4 '{{ Range_Name }}' Range
+  oneview_id_pools_ipv4_range:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Range_Name }}"
+      subnetUri: "{{ subnet_uri }}"
+      type: "Range"
+      rangeCategory: "Custom"
+      startAddress: "{{ IPv4_Start_Address }}"
+      endAddress: "{{ IPv4_End_Address }}"
+  delegate_to: localhost
+#
+#
+- name: Ensure the IPv4 '{{ Range_Name }}' Range is enabled
+  oneview_id_pools_ipv4_range:
+    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Range_Name }}"
+      subnetUri: "{{ subnet_uri }}"
+      enabled: True
+  delegate_to: localhost

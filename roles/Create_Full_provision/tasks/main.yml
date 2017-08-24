@@ -1,6 +1,80 @@
-#
-# First need to setup the SAN
-#
+### Add Users
+- name: Ensure that the User is present using the default configuration
+  oneview_user:
+#    config: "{{ config }}"
+    state: present
+    data:
+      enabled: true
+      category: "users"
+      fullName: "{{ User_Fullname }}"
+      userName: "{{ User_Username }}"
+      password: "{{ User_Password }}"
+      emailAddress: "{{ User_emailAddress }}" # Optional
+      mobilePhone: "{{ User_mobilePhone }}" # Optional
+      officePhone: "{{ User_officePhone }}" # Optional
+      roles:
+        - "Infrastructure administrator"
+
+### Sort out Appliance Time and Locale
+- name: Ensures the Appliance time and locale configuration locale is en_US.UTF-8
+  oneview_appliance_time_and_locale_configuration:
+    config: "{{ config }}"
+    state: present
+    data:
+      locale: en_US.UTF-8
+      ntpServers: [16.110.135.123]
+      timezone: UTC
+      type: TimeAndLocale
+  delegate_to: localhost
+
+### Add IPv4 Subnet
+- name: Add IPv4 '{{ Subnet_Name }}' Subnet
+  oneview_id_pools_ipv4_subnet:
+#    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Subnet_Name }}"
+      type: "Subnet"
+      networkId: "{{ SubnetID }}" #Subnet ID in OneView
+      subnetmask: "{{ SubnetMask }}"
+      gateway: "{{ IPv4_Gateway }}"
+      domain: "{{ IPv4_Domain }}"
+      dnsServers: []
+  delegate_to: localhost
+
+## Gather this information
+- name: Gather facts about '{{ Subnet_Name }}' IPV4 Subnets
+  oneview_id_pools_ipv4_subnet_facts:
+#    config: "{{ config }}"
+    name: "{{ Subnet_Name }}"
+- set_fact: subnet_uri="{{ id_pools_ipv4_subnets[0].uri }}"
+
+### Create Range for Subnet
+- name: Add IPv4 '{{ Range_Name }}' Range
+  oneview_id_pools_ipv4_range:
+#    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Range_Name }}"
+      subnetUri: "{{ subnet_uri }}"
+      type: "Range"
+      rangeCategory: "Custom"
+      startAddress: "{{ IPv4_Start_Address }}"
+      endAddress: "{{ IPv4_End_Address }}"
+  delegate_to: localhost
+
+### Ensure the Range is enabled
+- name: Ensure the IPv4 '{{ Range_Name }}' Range is enabled
+  oneview_id_pools_ipv4_range:
+#    config: "{{ config }}"
+    state: present
+    data:
+      name: "{{ Range_Name }}"
+      subnetUri: "{{ subnet_uri }}"
+      enabled: True
+  delegate_to: localhost
+
+### Need to setup the SAN
 - name: Creates a Device Manager for the Brocade SAN provider with the given hostname and credentials
   oneview_san_manager:
 #    config: '{{ config }}'
@@ -18,9 +92,8 @@
           value: "{{ SAN_Mgr_Password }}"
         - name: UseSsl
           value: true
-#
-# Create Storage system with 3 pools
-#
+
+### Create Storage system with 3 pools
 - name: Create a Storage System with 3 managed pool
   oneview_storage_system:
 #    config: "{{ config }}"
@@ -46,7 +119,8 @@
             deviceType: FC
 
   delegate_to: localhost
-#
+
+### Gather SAN Information
 - name: Gather facts about SAN A
   oneview_managed_san_facts:
 #    config: "{{ config }}"
@@ -54,8 +128,7 @@
   delegate_to: localhost
 
 - set_fact: SAN_A_Uri="{{ managed_sans[0].uri }}"
-#
-#
+
 - name: Gather facts about SAN B
   oneview_managed_san_facts:
 #    config: "{{ config }}"
@@ -63,9 +136,8 @@
   delegate_to: localhost
 
 - set_fact: SAN_B_Uri="{{ managed_sans[0].uri }}"
-#
-# Create a set of networks
-#
+
+### Create a set of networks
 - name: Create Ethernet network for VLAN DMZ
   oneview_ethernet_network:
 #    config: "{{ config }}"
@@ -121,6 +193,7 @@
       bandwidth:
           maximumBandwidth: 20000
           typicalBandwidth: 2500
+      subnetUri: "{{ subnet_uri }}"
 
 - name: Create Ethernet network for Deployment (Synergy)
   oneview_ethernet_network:
@@ -176,9 +249,8 @@
       networkUris: #From this point on, choose the networks needed (Ethernet)
         - "{{ DMZ_VLAN }}"
         - "{{ Man_VLAN }}"
-#
-# Gather information and store as local variables
-#
+
+### Gather information and store as local variables
 - name: Gather facts about deployment network & Store variable
   oneview_ethernet_network_facts:
 #    config: "{{ config }}"
@@ -220,9 +292,8 @@
     name: "{{ NET_SAN_B }}"
 
 - set_fact: NET_SAN_B_Uri="{{ fc_networks[0].uri }}"
-#
-# Produce LIG
-#
+
+### Produce LIG
 - name: Ensure that the Logical Interconnect Group is present
   oneview_logical_interconnect_group:
 #    config: "{{ config }}"
@@ -233,9 +304,7 @@
       enclosureType: "{{ Encl_Type }}"
       interconnectBaySet: 3
       redundancyType: "Redundant"
-#
-# Now for the interconnect connections
-#
+### Now for the interconnect connections
       interconnectMapTemplate:
         interconnectMapEntryTemplates:
           - logicalDownlinkUri: ~
@@ -254,9 +323,7 @@
                     - relativeValue: 1
                       type: "Enclosure"
             permittedInterconnectTypeName: "{{ InterconType40 }}"
-#
-# This is the Uplink Set code. Everytime logical Port Config Infos appears, its a new uplink. For visual aid, a single '#' will be used to break up the code
-#
+### This is the Uplink Set code. Everytime logical Port Config Infos appears, its a new uplink. For visual aid, a single '#' will be used to break up the code
       uplinkSets:
         - logicalPortConfigInfos:
           - desiredSpeed: "Auto"
@@ -368,18 +435,15 @@
             - "{{ NET_VLANDMZ_Uri }}"
             - "{{ NET_VLANMan_Uri }}"
             - "{{ NET_VLANCust_Uri }}"
-#
-# Gather LIG information
-#
+
+### Gather LIG information
 - name: Gather facts about all Logical Interconnect Groups
   oneview_logical_interconnect_group_facts:
 #    config: "{{ config }}"
     name: "SYN-DBPOC-LIG"
-
 - set_fact: LIG_Uri="{{ logical_interconnect_groups[0].uri }}"
-#
-# Create Enclosure Group
-#
+
+### Create Enclosure Group
 - name: Ensure that Enclosure Group is present using the default configuration
   oneview_enclosure_group:
 #    config: "{{ config }}"
@@ -401,23 +465,18 @@
         - interconnectBay: 5
         - interconnectBay: 6
           logicalInterconnectGroupUri: "{{ LIG_Uri }}"
-#
-# IP Section: Uri is the Management IP added in settings...NOT in Networks
-#
+### IP Section: Uri is the Management IP added in settings...NOT in Networks
       ipAddressingMode: "IpPool"
       ipRangeUris:
-        - "{{ IP_Range_Uri }}"
-#
-# OS Deploment Settings
-#
+        - "{{ subnet_uri }}"
+### OS Deploment Settings
       osDeploymentSettings:
         manageOSDeployment: true
         deploymentModeSettings:
           deploymentMode: "External"
           deploymentNetworkUri: "{{ NET_Deploy_Uri }}" #Deployment Netork
-#
-# Gather information on Enclosure Groups
-#
+
+### Gather information on Enclosure Groups
 - name: Gather facts about all Enclosure Groups
   oneview_enclosure_group_facts:
 #    config: "{{ config }}"

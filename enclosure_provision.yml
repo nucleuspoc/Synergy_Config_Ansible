@@ -3,6 +3,10 @@
   connection: local
   roles:
     - {role: Create_User}
+    - {role: Appliance_Time_and_Locale_Configuration}
+    - {role: Create_IPv4_Subnet}
+    - {role: Create_IPv4_Ranges}
+    - {role: Ensure_IPv4_Range_is_Enabled}
     - {role: Create_SAN_Manager}
     - {role: Create_Storage_System_with_Pools}
     - {role: Create_Current_Network_Setup}

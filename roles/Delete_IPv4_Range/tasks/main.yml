@@ -1,0 +1,13 @@
+- name: Gather facts about '{{ Subnet_Name }}' IPV4 Subnets
+  oneview_id_pools_ipv4_subnet_facts:
+    config: "{{ config }}"
+    name: "{{ Subnet_Name }}"
+- set_fact: subnet_uri="{{ id_pools_ipv4_subnets[0].uri }}"
+
+- name: Delete Ipv4 Range: '{{ Range_Name }}'
+  oneview_id_pools_ipv4_range:
+    config: '{{ config }}'
+    state: absent
+    data:
+      name: "{{ Range_Name }}"
+      subnetUri: "{{ subnet_uri }}"

@@ -1,0 +1,14 @@
+- name: Remove '{{ NET_Eth_Name }}' from Subnet
+  oneview_ethernet_network:
+    config: '{{ config }}'
+    state: present
+    data:
+      name: "{{ NET_Eth_Name }}"
+      subnetUri:
+
+- name: Delete '{{ Subnet_Name }}' Subnet
+  oneview_id_pools_ipv4_subnet:
+    config: "{{ config }}"
+    state: absent
+    data:
+      name: "{{ Subnet_Name }}"
